@@ -32,8 +32,11 @@ class QLearningAgent(Agent):
         """ Look up the current value of the state. """
         # *********
         # TODO 3.1.
+        if state in self.Q.values():
 
-        # *********
+        else:
+            return None
+            # *********
 
     def getQValue(self, state, action):
         """ Look up the current q-value of the state action pair. """

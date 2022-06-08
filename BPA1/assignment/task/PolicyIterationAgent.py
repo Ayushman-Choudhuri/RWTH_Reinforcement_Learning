@@ -17,12 +17,14 @@ class PolicyIterationAgent(Agent):
         self.iterations = iterations
 
         states = self.mdp.getStates()
+        # print(states)
         number_states = len(states)
+        # print(number_states/4)
         # Policy initialization
         # ******************
         # TODO 1.1.a)
-        # self.V = ...
-
+        # self.V = np.zeros((int(number_states/4), int(number_states/3)))
+        self.V = {s: 0 for s in states}
         # *******************
 
         self.pi = {s: self.mdp.getPossibleActions(s)[-1] if self.mdp.getPossibleActions(s) else None for s in states}
@@ -32,23 +34,38 @@ class PolicyIterationAgent(Agent):
         while True:
             # Policy evaluation
             for i in range(iterations):
+                # print("i: ", i)
                 newV = {}
                 for s in states:
+                    # print(s)
                     a = self.pi[s]
                     # *****************
                     # TODO 1.1.b)
-                    # if...
+                    if a is not None:
+                        p = np.array(self.mdp.getTransitionStatesAndProbs(s, a), dtype=object)
+                        # print(p)
+                        r = np.array(self.mdp.getReward(s, a, None), dtype=object)
+                        d = self.discount
+                        sub = 0
+                        for j in range(p.shape[0]):
+                            sub += p[j][1] * (r + d * self.V[p[j][0]])
+                        newV[s] = sub
+                        # print("newV: ", newV)
                     #
-                    # else:...
+                    else:
+                        newV[s] = 0.0
+                        # print("newV: ", newV)
 
                 # update value estimate
                 # self.V=...
-
+                self.V = newV
+                # print("self.V: ", self.V)
                 # ******************
 
             policy_stable = True
             for s in states:
                 actions = self.mdp.getPossibleActions(s)
+                # print("actions: ", actions)
                 if len(actions) < 1:
                     self.pi[s] = None
                 else:
@@ -56,13 +73,26 @@ class PolicyIterationAgent(Agent):
                     # ************
                     # TODO 1.1.c)
                     # self.pi[s] = ...
-
+                    d = self.discount
+                    newPi = []
+                    for i in actions:
+                        p = np.array(self.mdp.getTransitionStatesAndProbs(s, i), dtype=object)
+                        r = np.array(self.mdp.getReward(s, i, None), dtype=object)
+                        act = 0
+                        for j in range(p.shape[0]):
+                            act += p[j][1] * (r + d * self.V[p[j][0]])
+                        newPi.append(act)
+                        print("newPi: ", newPi)
+                    self.pi[s] = actions[np.argmax(newPi)]
                     # policy_stable =
-
+                    if old_action != self.pi[s]:
+                        policy_stable = False
                     # ****************
             counter += 1
 
-            if policy_stable: break
+            if policy_stable:
+                print(self.pi)
+                break
 
         print("Policy converged after %i iterations of policy iteration" % counter)
 
@@ -72,7 +102,7 @@ class PolicyIterationAgent(Agent):
         """
         # *******
         # TODO 1.2.
-
+        return self.V[state]
         # ********
 
     def getQValue(self, state, action):
@@ -85,7 +115,22 @@ class PolicyIterationAgent(Agent):
         """
         # *********
         # TODO 1.3.
+        newQ = 0
+        if action is not None:
+            p = np.array(self.mdp.getTransitionStatesAndProbs(state, action), dtype=object)
+            # print(p)
+            r = np.array(self.mdp.getReward(state, action, None), dtype=object)
+            d = self.discount
+            sub = 0
+            for j in range(p.shape[0]):
+                sub += p[j][1] * (r + d * self.V[p[j][0]])
+            newQ = sub
+            # print("newV: ", newV)
+        #
+        else:
+            newQ = 0.0
 
+        return newQ
         # **********
 
     def getPolicy(self, state):
@@ -95,7 +140,7 @@ class PolicyIterationAgent(Agent):
         """
         # **********
         # TODO 1.4.
-
+        return self.pi[state]
         # **********
 
     def getAction(self, state):

@@ -8,8 +8,8 @@ from RandomAgent import RandomAgent
 import numpy as np
 
 # THE FOLLOWING AGENTS WILL BE COMPLETED DURING THE TASKS
-# from PolicyIterationAgent import PolicyIterationAgent  # TASK 1
-# from ValueIterationAgent import ValueIterationAgent  # TASK 2
+from PolicyIterationAgent import PolicyIterationAgent  # TASK 1
+from ValueIterationAgent import ValueIterationAgent  # TASK 2
 # from QLearningAgent import QLearningAgent  # TASK 3
 
 
