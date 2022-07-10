@@ -3,6 +3,7 @@ import abstract
 
 # ABSTRACT CLASS FOR AGENTS
 
+
 class Agent:
 
     def getAction(self, state):

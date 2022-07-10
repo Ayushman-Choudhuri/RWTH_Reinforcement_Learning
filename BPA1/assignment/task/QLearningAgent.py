@@ -40,6 +40,16 @@ class QLearningAgent(Agent):
         """ Look up the current q-value of the state action pair. """
         # *********
         # TODO 3.2.
+        flag = 0
+        actions = self.actionFunction(state)
+        for i in range(len(self.Q)):
+            if state == list(self.Q.keys())[i][0]:
+                flag += 1
+            # If state is not in self.Q, initialize Q value for state with qInitValue and state value as 0.0
+        if flag == 0:
+            for a in actions:
+                self.V[state] = 0.0
+                self.Q[state, a] = self.qInitValue
         return self.Q[(state, action)]
         # *********
 

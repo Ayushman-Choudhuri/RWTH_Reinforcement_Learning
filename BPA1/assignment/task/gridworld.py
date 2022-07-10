@@ -60,7 +60,10 @@ def getCliffGrid2():
     print('not implemented')  # remove this after implementing the gridworld
     # **********
     # TODO 1.7
-
+    grid = [[' ', ' ', ' ', ' ', ' '],
+            [8, 'S', ' ', ' ', 10],
+            [-100, -100, -100, -100, -100]]
+    return Gridworld(grid)
     # **********
 
 
